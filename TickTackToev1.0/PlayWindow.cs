@@ -401,7 +401,263 @@ namespace TickTackToev1._0
             panel2.Visible = false;
         }
 
-        
+        //----------------------------------Single Player MiniMax Algorithm------------------------------------------------------
 
+        //gameXO is the game
+        static String[] gameXO = new String[9];
+        //_sdepth is used to control the depth
+        static int sdepth;
+
+        public PictureBox getPictureBox(int i)
+        {
+            switch(i){
+                case 0: return pictureBox5;
+                case 1: return pictureBox4;
+                case 2: return pictureBox3;
+                case 3: return pictureBox7;
+                case 4: return pictureBox6;
+                case 5: return pictureBox2;
+                case 6: return pictureBox8;
+                case 7: return pictureBox9;
+                case 8: return pictureBox1;
+                default: return null;
+            }
+        }
+
+        public int makeMove(int index)
+        {	/*Step to do in this method
+         *1- update gameXO. put X in the gameXO[index]
+         *2- test if game is finished (draw or X win)
+         *3- call MinMax algorithm and return the score and return the best position for O
+         *4- update gameXO. put O in its position
+         *5- test if game is finished (draw or O win)
+         */
+            //return -1 to know that player X wins
+            //return -2 to know that the game is draw
+            //1
+
+            gameXO[index] = "X";
+            //2
+            if (gameOver(gameXO))
+            {
+                return -1;
+            }
+            if (drawGame(gameXO))
+            {
+                return -2;
+            }
+
+            //3
+            ResultMM res = MinMax(gameXO, "MAX", 0, 0);
+            int i = res.getIntrus();
+            // code for show the image or whatever in the design
+            setImage(getPictureBox(i));
+
+            //4
+            gameXO[i] = "O";
+
+            //5
+            // return i+20 to know that o wins (i used this method for programming issues)
+            // retrun i-30 to know that the game is draw (i used this method for programming issues)
+            if (gameOver(gameXO))
+            {
+                return i + 20;
+            }
+            if (drawGame(gameXO))
+            {
+                return i - 30;
+            }
+
+            return i;
+
+        }
+
+        public ResultMM MinMax(String[] demo, String level, int fils, int depth)
+        {/*MinMax algorithm
+         * 1- generate successor
+         * 2- if no successor or game is finished return score 
+         * 3- if there is successor
+         * 	a) apply MinMax for each successor
+         *	b) after recursive call, i return the good score
+         */
+
+            //1---------------
+
+            List<String[]> children = genere_succ(demo, level);
+            //2------------------
+            if (children == null && sdepth != -1)
+            {
+                sdepth = -1;
+                depth = depth + 1;
+            }
+
+            if (children == null || gameOver(demo))
+            {
+                return new ResultMM(demo, getScore(demo), depth);
+            }
+            else
+            {//3------------------
+                if (sdepth > children.Count())
+                {
+                    sdepth = children.Count();
+                    depth = depth + 1;
+                }
+
+                List<ResultMM> listScore = new List<ResultMM>();
+                //pass into each child
+                for (int i = 0; i < children.Count(); i++)
+                {//3 a)---------------
+                    listScore.Add(MinMax(children.ElementAt(i), inverse(level), 1, depth + 1));
+                }
+                //3 b)----------------
+                ResultMM res = getResult(listScore, level);
+                if (fils == 1)
+                {
+                    res.updateMatrix(demo);
+                }
+
+                return res;
+            }
+        }
+
+        public ResultMM getResult(List<ResultMM> listScore, String level)
+        {//this method is used to get the appropriate score
+            //if level is MAX, i search for the higher score in the nearer depth
+            //if level is MIN, i search for the lowest score in the nearer depth
+            ResultMM result = listScore.ElementAt(0);
+            if (level.Equals("MAX"))
+            {
+                for (int i = 1; i < listScore.Count(); i++)
+                {
+                    if ((listScore.ElementAt(i).getScore() > result.getScore())
+                            || (listScore.ElementAt(i).getScore() == result.getScore() && listScore.ElementAt(i).depth < result.depth))
+                    {
+                        result = listScore.ElementAt(i);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i < listScore.Count(); i++)
+                {
+                    if ((listScore.ElementAt(i).getScore() < result.getScore())
+                            || (listScore.ElementAt(i).getScore() == result.getScore() && listScore.ElementAt(i).depth < result.depth))
+                    {
+                        result = listScore.ElementAt(i);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public List<String[]> genere_succ(String[] demo, String level)
+        {//generate successor
+            //if level is MAX, generate successor with o ( o in lowerCase)
+            //if level is MIN, generate successor with x ( x in lowerCase)
+            //if demo has no successor, return null
+            List<String[]> succ = new List<String[]>();
+            for (int i = 0; i < demo.Length; i++)
+            {
+                if (demo[i].Equals(" "))
+                {
+                    String[] child = new String[9];
+                    for (int j = 0; j < 9; j++)
+                    {
+                        child[j] = demo[j];
+                    }
+
+                    if (level.Equals("MAX"))
+                    {
+                        child[i] = "o";
+                    }
+                    else
+                    {
+                        child[i] = "x";
+                    }
+                    succ.Add(child);
+                }
+            }
+            return (succ.Count() == 0) ? null : succ;
+        }
+
+        public String inverse(String level)
+        { //inverse level from MIN to MAX
+            return (level.Equals("MIN")) ? "MAX" : "MIN";
+        }
+
+        public int getScore(String[] demo)
+        { //return  the score:
+            //if X win return -1;
+            //if O win return 1;
+            //else return 0, this mean draw
+            if ((demo[0].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[1].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[2].Equals("x", StringComparison.InvariantCultureIgnoreCase)) || (demo[3].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[5].Equals("x", StringComparison.InvariantCultureIgnoreCase))
+                    || (demo[6].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[7].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("x", StringComparison.InvariantCultureIgnoreCase)) || (demo[0].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[3].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[6].Equals("x", StringComparison.InvariantCultureIgnoreCase))
+                    || (demo[1].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[7].Equals("x", StringComparison.InvariantCultureIgnoreCase)) || (demo[2].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[5].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("x", StringComparison.InvariantCultureIgnoreCase))
+                    || (demo[0].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("x", StringComparison.InvariantCultureIgnoreCase)) || (demo[2].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[6].Equals("x", StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return -1;
+            }
+
+            if ((demo[0].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[1].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[2].Equals("o", StringComparison.InvariantCultureIgnoreCase)) || (demo[3].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[5].Equals("o", StringComparison.InvariantCultureIgnoreCase))
+                    || (demo[6].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[7].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("o", StringComparison.InvariantCultureIgnoreCase)) || (demo[0].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[3].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[6].Equals("o", StringComparison.InvariantCultureIgnoreCase))
+                    || (demo[1].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[7].Equals("o", StringComparison.InvariantCultureIgnoreCase)) || (demo[2].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[5].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("o", StringComparison.InvariantCultureIgnoreCase))
+                    || (demo[0].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("o", StringComparison.InvariantCultureIgnoreCase)) || (demo[2].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[6].Equals("o", StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        public bool gameOver(String[] demo)
+        {//if the score of the game is 0 then return false. this mean we have a winner
+            return (getScore(demo) != 0) ? true : false;
+        }
+
+        public bool drawGame(String[] demo)
+        {
+            //test if the game is draw.
+            //if demo is full, this mean that game is draw
+            //if demo still has empty square, this mean that the game isn't finished
+            for (int i = 0; i < 9; i++)
+            {
+                if (demo[i].Equals(" "))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    public class ResultMM
+    {
+        public String[] matrix;
+        public int score;
+        public int depth;
+
+        public ResultMM(String[] matrix, int score, int depth)
+        {
+            this.matrix = matrix;
+            this.score = score;
+            this.depth = depth;
+        }
+
+        public void updateMatrix(String[] matrix)
+        {
+            this.matrix = matrix;
+        }
+
+        public int getScore()
+        {
+            return score;
+        }
+        public int getIntrus()
+        {
+            for (int i = 0; i < 9; i++)
+                if (matrix[i].Equals("o"))
+                    return i;
+            return -1;
+        }
     }
 }
