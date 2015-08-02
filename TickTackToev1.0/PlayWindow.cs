@@ -101,6 +101,8 @@ namespace TickTackToev1_0
             {
                 gameXO[i] = " ";
             }
+
+            playforFirstTime = true;
         }
 
         public void getData() {
@@ -370,18 +372,22 @@ namespace TickTackToev1_0
             changePlayer();
         }
 
-        public void checkWinnerSinglePlay()
+        public bool checkWinnerSinglePlay()
         {
             if (checkForWin())
             {
                 Console.WriteLine("We have a winner! Congrats!");
+                return true;
                 //panel2.Visible = true;
             }
             else if (isBoardFull())
             {
                 Console.WriteLine("Appears we have a draw!");
+                return true;
                 //panel2.Visible = true;
             }
+            changePlayer();
+            return false;
         }
 
 
@@ -397,21 +403,6 @@ namespace TickTackToev1_0
         }
     }
 
-        public void setImageOponent(PictureBox pb)
-        {
-            if (currentPlayerMark == 'x')
-            {
-                Image img = Image.FromFile("round_1.gif");
-                pb.Image = img;
-
-
-            }
-            else if (currentPlayerMark == 'o')
-            {
-                Image img = Image.FromFile("cross_1.gif");
-                pb.Image = img;
-            }
-        }
             
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
@@ -420,11 +411,12 @@ namespace TickTackToev1_0
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox1.Image == null)
                 {
-                    playforFirstTime = false;
+                    
                     setImage(pictureBox1);
                     placeMark(2, 2);
                     checkWinner();
@@ -432,17 +424,21 @@ namespace TickTackToev1_0
             }
             else {                
                 setImage(pictureBox1);
-                makeMove(8);
+                placeMarkSinglePlay(2, 2);
+                if (!checkWinnerSinglePlay())
+                {
+                    makeMove(8);
+                }
             }
         }
 
         private void pictureBox5_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox5.Image == null)
                 {
-                    playforFirstTime = false;
                     setImage(pictureBox5);
                     placeMark(0, 0);
                     checkWinner();
@@ -451,17 +447,21 @@ namespace TickTackToev1_0
             else
             {
                 setImage(pictureBox5);
-                makeMove(0);
+                placeMarkSinglePlay(0, 0);
+                if (!checkWinnerSinglePlay()) {
+                    makeMove(0);
+                }
+                
             }
         }
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox4.Image == null)
                 {
-                    playforFirstTime = false;
                     setImage(pictureBox4);
                     placeMark(0, 1);
                     checkWinner();
@@ -469,17 +469,21 @@ namespace TickTackToev1_0
             }
             else {
                 setImage(pictureBox4);
-                makeMove(1);
+                placeMarkSinglePlay(0, 1);
+                if (!checkWinnerSinglePlay())
+                {
+                    makeMove(1);
+                }
             }
         }
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox3.Image == null)
                 {
-                    playforFirstTime = false;
                     setImage(pictureBox3);
                     placeMark(0, 2);
                     checkWinner();
@@ -487,17 +491,21 @@ namespace TickTackToev1_0
             }
             else {
                 setImage(pictureBox3);
-                makeMove(2);
+                placeMarkSinglePlay(0, 2);
+                if (!checkWinnerSinglePlay())
+                {
+                    makeMove(2);
+                }
             }
         }
 
         private void pictureBox7_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox7.Image == null)
                 {
-                    playforFirstTime = false;
                     setImage(pictureBox7);
                     placeMark(1, 0);
                     checkWinner();
@@ -505,17 +513,21 @@ namespace TickTackToev1_0
             }
             else {
                 setImage(pictureBox7);
-                makeMove(3);
+                placeMarkSinglePlay(1, 0);
+                if (!checkWinnerSinglePlay())
+                {
+                    makeMove(3);
+                }
             }
         }
 
         private void pictureBox6_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox6.Image == null)
                 {
-                    playforFirstTime = false;
                     setImage(pictureBox6);
                     placeMark(1, 1);
                     checkWinner();
@@ -523,17 +535,21 @@ namespace TickTackToev1_0
             }
             else {
                 setImage(pictureBox6);
-                makeMove(4);
+                placeMarkSinglePlay(1, 1);
+                if (!checkWinnerSinglePlay())
+                {
+                    makeMove(4);
+                }
             }
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox2.Image == null)
                 {
-                    playforFirstTime = false;
                     setImage(pictureBox2);
                     placeMark(1, 2);
                     checkWinner();
@@ -541,17 +557,22 @@ namespace TickTackToev1_0
             }
             else {
                 setImage(pictureBox2);
-                makeMove(5);
+                placeMarkSinglePlay(1, 2);
+                if (!checkWinnerSinglePlay())
+                {
+                    makeMove(5);
+                }
             }
         }
 
         private void pictureBox8_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox8.Image == null)
                 {
-                    playforFirstTime = false;
+
                     setImage(pictureBox8);
                     placeMark(2, 0);
                     checkWinner();
@@ -559,17 +580,21 @@ namespace TickTackToev1_0
             }
             else {
                 setImage(pictureBox8);
-                makeMove(6);
+                placeMarkSinglePlay(2, 0);
+                if (!checkWinnerSinglePlay())
+                {
+                    makeMove(6);
+                }
             }
         }
 
         private void pictureBox9_Click(object sender, EventArgs e)
         {
+            playforFirstTime = false;
             if (singleOrMulti == "Multi")
             {
                 if (currentPlayerMark == mySymbol && pictureBox9.Image == null)
                 {
-                    playforFirstTime = false;
                     setImage(pictureBox9);
                     placeMark(2, 1);
                     checkWinner();
@@ -577,7 +602,11 @@ namespace TickTackToev1_0
             }
             else {
                 setImage(pictureBox9);
-                makeMove(7);
+                placeMarkSinglePlay(2, 1);
+                if (!checkWinnerSinglePlay())
+                {
+                    makeMove(7);
+                }
             }
         }
 
@@ -636,8 +665,39 @@ namespace TickTackToev1_0
             ResultMM res = MinMax(gameXO, "MAX", 0, 0);
             int i = res.getIntrus();
             // code for show the image or whatever in the design
-            setImageOponent(getPictureBox(i));
+            setImage(getPictureBox(i));
+            switch (i) { 
+            
+                case 0 :
+                    placeMarkSinglePlay(0, 0);
+                    break;
+                case 1:
+                    placeMarkSinglePlay(0, 1);
+                    break;
+                case 2:
+                    placeMarkSinglePlay(0, 2);
+                    break;
+                case 3:
+                    placeMarkSinglePlay(1, 0);
+                    break;
+                case 4:
+                    placeMarkSinglePlay(1, 1);
+                    break;
+                case 5:
+                    placeMarkSinglePlay(1, 2);
+                    break;
+                case 6:
+                    placeMarkSinglePlay(2, 0);
+                    break;
+                case 7:
+                    placeMarkSinglePlay(2, 1);
+                    break;
+                case 8:
+                    placeMarkSinglePlay(2, 2);
+                    break;             
 
+            }
+            checkWinnerSinglePlay();
 
             //4
             gameXO[i] = "O";
