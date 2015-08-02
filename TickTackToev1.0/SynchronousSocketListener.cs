@@ -70,15 +70,11 @@ namespace TickTackToev1._0
                 data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
                 if ((data.IndexOf("<EOF>") > -1) || isWantToSendData)
                 {
+
                     break;
                 }
             }
-
-            if (!isWantToSendData) {
-                return data;
-                
-            }
-            return "";
+                return data;         
             
         }
 

@@ -67,35 +67,74 @@ namespace TickTackToev1._0
 
         private void metroButton1_Click(object sender, EventArgs e)
         {
-            var buttons = groupBox1.Controls.OfType<RadioButton>()
-                                      .FirstOrDefault(r => r.Checked);
-            home.ServerOrClient = buttons.Text.ToString();
-            home.PlayerName = playerName.Text.ToString();
-            if (isRoundSelected) {
-                home.PlyerSymbol = "circle";
+            if (!singlePlayerCheck.Checked)
+            {
+                var buttons = groupBox1.Controls.OfType<RadioButton>()
+                                          .FirstOrDefault(r => r.Checked);
+                home.ServerOrClient = buttons.Text.ToString();
+                home.PlayerName = playerName.Text.ToString();
+                if (isRoundSelected)
+                {
+                    home.PlyerSymbol = "circle";
+                }
+                if (isCrossSelected)
+                {
+                    home.PlyerSymbol = "cross";
+                }
+                Thread t = new Thread(startServices);
+                t.Start();
             }
-            if (isCrossSelected) {
-                home.PlyerSymbol = "cross";
+            else {
+                home.PlayerName = playerName.Text.ToString();
+                if (isRoundSelected)
+                {
+                    home.PlyerSymbol = "circle";
+                }
+                if (isCrossSelected)
+                {
+                    home.PlyerSymbol = "cross";
+                }
             }
-            Thread t = new Thread(startServices);
-            t.Start();
             this.Close();
+            home.Show();
         }
 
         public void startServices() {
+
             if (home.ServerOrClient == "Server")
             {
                 home.S = SynchronousSocketListener.StartListening();
+                Thread t = new Thread(home.getData);
+                t.Start();
                 SynchronousSocketListener.SendData(home.S, playerName.Text.ToString());
                 
             }
             else
             {
                 home.S = SynchronousSocketClient.StartClient();
+                Thread t = new Thread(home.getData);
+                t.Start();
                 SynchronousSocketClient.sendData(home.S, playerName.Text.ToString());
             }
-            home.getData();
+            
         }
+
+        private void singlePlayerCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if (singlePlayerCheck.Checked)
+            {
+                groupBox1.Enabled = false;
+            }
+            else {
+                groupBox1.Enabled = true;
+            }
+        }
+
+        private void serverRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
 
     }
 }

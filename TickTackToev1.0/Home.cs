@@ -23,10 +23,12 @@ namespace TickTackToev1._0
         public Home()
         {
             InitializeComponent();
+            serverOrClient = "single";
         }
 
         private void metroButton1_Click(object sender, EventArgs e)
         {
+            this.Hide();
             PlayerOption playerOption = new PlayerOption(this);
             playerOption.Show();
         }
@@ -59,18 +61,28 @@ namespace TickTackToev1._0
         {
 
             String mySymbol,otherPlayerSymbol;
-            if (plyerSymbol == "circle")
+            if (serverOrClient != "single")
             {
-                mySymbol = "circle";
-                otherPlayerSymbol = "cross";
+                if (plyerSymbol == "circle")
+                {
+                    mySymbol = "circle";
+                    otherPlayerSymbol = "cross";
+                }
+                else
+                {
+                    mySymbol = "cross";
+                    otherPlayerSymbol = "circle";
+                }
+                TickTackToe t = new TickTackToe(playerName, otherPlayerName, mySymbol, otherPlayerSymbol, serverOrClient, s);
+                this.Hide();
+                t.Show();
             }
             else {
-                mySymbol = "cross";
-                otherPlayerSymbol = "circle";
+                TickTackToe t = new TickTackToe(playerName, plyerSymbol);
+                this.Hide();
+                t.Show();
             }
-            TickTackToe t = new TickTackToe(playerName,otherPlayerName,mySymbol,otherPlayerSymbol,serverOrClient,s);
-            this.Hide();
-            t.Show();
+            
         }
 
         public void getData()
@@ -78,13 +90,13 @@ namespace TickTackToev1._0
             if (serverOrClient == "Server")
             {
                 string data = SynchronousSocketListener.getData(s);
-                otherPlayerName = data.Substring(0,data.Length-5);
+                otherPlayerName = data.Substring(0,data.Length-4);
 
             }
             else
             {
                 string data = SynchronousSocketClient.getData(s);
-                otherPlayerName = data.Substring(0, data.Length - 5); 
+                otherPlayerName = data.Substring(0, data.Length - 4); 
             }
         }
     }

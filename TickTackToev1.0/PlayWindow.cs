@@ -19,10 +19,12 @@ namespace TickTackToev1._0
         private char currentPlayerMark;
         private char mySymbol;
         private string serverOrClient;
-        Socket socket;
-        Thread t;
-        PictureBox[,] picBoxes;
+        private Socket socket;
+        private Thread t;
+        private PictureBox[,] picBoxes;
         private bool playforFirstTime;
+        private string singleOrMulti;
+
         public TickTackToe(String me,String player,String meSymbol,String playerSymbol,string serverOrClient,Socket s)
         {
             InitializeComponent();
@@ -34,6 +36,7 @@ namespace TickTackToev1._0
             panel2.Visible = false;
 
             playerLabel.Text = player;
+            Console.WriteLine("Name : " +player);
             if (playerSymbol == "circle")
             {
                 playerBox.Image = Image.FromFile("circle_still.png");
@@ -64,36 +67,83 @@ namespace TickTackToev1._0
             picBoxes = new PictureBox[3, 3]{ { pictureBox5, pictureBox4, pictureBox3 }, { pictureBox7, pictureBox6, pictureBox2 }, { pictureBox8, pictureBox9, pictureBox1 }};
 
             playforFirstTime = true;
+            singleOrMulti = "Multi";
+            
+        }
+
+        public TickTackToe(String playerName, String playerSymbol)
+        {
+            InitializeComponent();
+            board = new char[3][];
+            for (int i = 0; i < 3; i++)
+            {
+                board[i] = new char[3];
+            }
+            initializeBoard();
+            panel2.Visible = false;
+
+            meLabel.Text = playerName;
+            if (playerSymbol == "circle")
+            {
+                meBox.Image = Image.FromFile("circle_still.png");
+                currentPlayerMark = 'x';
+                mySymbol = 'x';
+            }
+            else
+            {
+                meBox.Image = Image.FromFile("cross_still.png");
+                currentPlayerMark = 'o';
+                mySymbol = 'o';
+            }
+            playerLabel.Text = "";
+            singleOrMulti = "Single";
             
         }
 
         public void getData() {
             if (serverOrClient == "Server")
             {
-                string[] data = SynchronousSocketListener.getData(socket).Substring(0,3).Split(',');
-                if (mySymbol == 'x')
+                string rawData = SynchronousSocketListener.getData(socket);
+                if (rawData == "We have a winner! Congrats!<EOF>" || rawData == "Appears we have a draw!<EOF>")
                 {
-                    picBoxes[Int32.Parse(data[0]), Int32.Parse(data[1])].Image = Image.FromFile("round_1.gif");
+                    Console.WriteLine(rawData);
                 }
-                else {
-                    picBoxes[Int32.Parse(data[0]), Int32.Parse(data[1])].Image = Image.FromFile("cross_1.gif");
+                else if(rawData!="<EOF>")
+                {
+                    string[] data = rawData.Substring(0, 3).Split(',');
+                    if (mySymbol == 'x')
+                    {
+                        picBoxes[Int32.Parse(data[0]), Int32.Parse(data[1])].Image = Image.FromFile("round_1.gif");
+                    }
+                    else
+                    {
+                        picBoxes[Int32.Parse(data[0]), Int32.Parse(data[1])].Image = Image.FromFile("cross_1.gif");
+                    }
+                    placeMarkRemote(Int32.Parse(data[0]), Int32.Parse(data[1]));
+                    checkWinner();
                 }
-                placeMarkRemote(Int32.Parse(data[0]), Int32.Parse(data[1]));
-                checkWinner();
             }
             else
             {
-                string[] data = SynchronousSocketClient.getData(socket).Substring(0, 3).Split(',');
-                if (mySymbol == 'x')
+                string rawData = SynchronousSocketClient.getData(socket);
+                if (rawData == "We have a winner! Congrats!<EOF>" || rawData == "Appears we have a draw!<EOF>")
                 {
-                    picBoxes[Int32.Parse(data[0]), Int32.Parse(data[1])].Image = Image.FromFile("round_1.gif");
+                    Console.WriteLine(rawData);
                 }
-                else
+                else if (rawData != "<EOF>")
                 {
-                    picBoxes[Int32.Parse(data[0]), Int32.Parse(data[1])].Image = Image.FromFile("cross_1.gif");
+                    string[] data = rawData.Substring(0, 3).Split(',');
+                    if (mySymbol == 'x')
+                    {
+                        picBoxes[Int32.Parse(data[0]), Int32.Parse(data[1])].Image = Image.FromFile("round_1.gif");
+                    }
+                    else
+                    {
+                        picBoxes[Int32.Parse(data[0]), Int32.Parse(data[1])].Image = Image.FromFile("cross_1.gif");
+                    }
+                    placeMarkRemote(Int32.Parse(data[0]), Int32.Parse(data[1]));
+                    checkWinner();
                 }
-                placeMarkRemote(Int32.Parse(data[0]), Int32.Parse(data[1]));
-                checkWinner();
             }
         }
 
@@ -265,15 +315,33 @@ namespace TickTackToev1._0
 
         public void checkWinner()
         {
+            String finalResult = "";
             if (checkForWin())
             {
+                 finalResult = "We have a winner! Congrats!";
                  Console.WriteLine("We have a winner! Congrats!");
-                 panel2.Visible = true;
+                 //panel2.Visible = true;
             }
             else if (isBoardFull())
             {
+                finalResult = "Appears we have a draw!";
                 Console.WriteLine("Appears we have a draw!");
-                panel2.Visible = true;
+                //panel2.Visible = true;
+            }
+
+            if (serverOrClient == "Server")
+            {
+                SynchronousSocketListener.IsWantToSendData = true;
+                SynchronousSocketListener.SendData(socket, finalResult);
+                t = new Thread(getData);
+                t.Start();
+            }
+            else
+            {
+                SynchronousSocketClient.IsWantToSendData = true;
+                SynchronousSocketClient.sendData(socket, finalResult);
+                t = new Thread(getData);
+                t.Start();
             }
             
             changePlayer();
@@ -299,100 +367,155 @@ namespace TickTackToev1._0
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox1.Image==null) {
-                playforFirstTime = false;
-                setImage(pictureBox1);
-                placeMark(2, 2);
-                checkWinner();
+            if (singleOrMulti == "Multi")
+            {
+                if (currentPlayerMark == mySymbol && pictureBox1.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox1);
+                    placeMark(2, 2);
+                    checkWinner();
+                }
             }
-            
+            else {
+                makeMove(8);
+            }
         }
 
         private void pictureBox5_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox5.Image == null)
+            if (singleOrMulti == "Multi")
             {
-                playforFirstTime = false;
-                setImage(pictureBox5);
-                placeMark(0, 0);
-                checkWinner();
+                if (currentPlayerMark == mySymbol && pictureBox5.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox5);
+                    placeMark(0, 0);
+                    checkWinner();
+                }
+            }
+            else
+            {
+                makeMove(0);
             }
         }
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox4.Image == null)
+            if (singleOrMulti == "Multi")
             {
-                playforFirstTime = false;
-                setImage(pictureBox4);
-                placeMark(0, 1);
-                checkWinner();
+                if (currentPlayerMark == mySymbol && pictureBox4.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox4);
+                    placeMark(0, 1);
+                    checkWinner();
+                }
+            }
+            else {
+                makeMove(1);
             }
         }
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox3.Image == null)
+            if (singleOrMulti == "Multi")
             {
-                playforFirstTime = false;
-                setImage(pictureBox3);
-                placeMark(0, 2);
-                checkWinner();
+                if (currentPlayerMark == mySymbol && pictureBox3.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox3);
+                    placeMark(0, 2);
+                    checkWinner();
+                }
+            }
+            else {
+                makeMove(2);
             }
         }
 
         private void pictureBox7_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox7.Image == null)
+            if (singleOrMulti == "Multi")
             {
-                playforFirstTime = false;
-                setImage(pictureBox7);
-                placeMark(1, 0);
-                checkWinner();
+                if (currentPlayerMark == mySymbol && pictureBox7.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox7);
+                    placeMark(1, 0);
+                    checkWinner();
+                }
+            }
+            else {
+                makeMove(3);
             }
         }
 
         private void pictureBox6_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox6.Image == null)
+            if (singleOrMulti == "Multi")
             {
-                playforFirstTime = false;
-                setImage(pictureBox6);
-                placeMark(1, 1);
-                checkWinner();
+                if (currentPlayerMark == mySymbol && pictureBox6.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox6);
+                    placeMark(1, 1);
+                    checkWinner();
+                }
+            }
+            else {
+                makeMove(4);
             }
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox2.Image == null)
+            if (singleOrMulti == "Multi")
             {
-                playforFirstTime = false;
-                setImage(pictureBox2);
-                placeMark(1, 2);
-                checkWinner();
+                if (currentPlayerMark == mySymbol && pictureBox2.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox2);
+                    placeMark(1, 2);
+                    checkWinner();
+                }
+            }
+            else {
+                makeMove(5);
             }
         }
 
         private void pictureBox8_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox8.Image == null)
+            if (singleOrMulti == "Multi")
             {
-                playforFirstTime = false;
-                setImage(pictureBox8);
-                placeMark(2, 0);
-                checkWinner();
+                if (currentPlayerMark == mySymbol && pictureBox8.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox8);
+                    placeMark(2, 0);
+                    checkWinner();
+                }
+            }
+            else {
+                makeMove(6);
             }
         }
 
         private void pictureBox9_Click(object sender, EventArgs e)
         {
-            if (currentPlayerMark == mySymbol && pictureBox9.Image == null)
+            if (singleOrMulti == "Multi")
             {
-                playforFirstTime = false;
-                setImage(pictureBox9);
-                placeMark(2, 1);
-                checkWinner();
+                if (currentPlayerMark == mySymbol && pictureBox9.Image == null)
+                {
+                    playforFirstTime = false;
+                    setImage(pictureBox9);
+                    placeMark(2, 1);
+                    checkWinner();
+                }
+            }
+            else {
+                makeMove(7);
             }
         }
 
@@ -590,18 +713,18 @@ namespace TickTackToev1._0
             //if X win return -1;
             //if O win return 1;
             //else return 0, this mean draw
-            if ((demo[0].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[1].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[2].Equals("x", StringComparison.InvariantCultureIgnoreCase)) || (demo[3].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[5].Equals("x", StringComparison.InvariantCultureIgnoreCase))
-                    || (demo[6].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[7].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("x", StringComparison.InvariantCultureIgnoreCase)) || (demo[0].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[3].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[6].Equals("x", StringComparison.InvariantCultureIgnoreCase))
-                    || (demo[1].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[7].Equals("x", StringComparison.InvariantCultureIgnoreCase)) || (demo[2].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[5].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("x", StringComparison.InvariantCultureIgnoreCase))
-                    || (demo[0].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("x", StringComparison.InvariantCultureIgnoreCase)) || (demo[2].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("x", StringComparison.InvariantCultureIgnoreCase) && demo[6].Equals("x", StringComparison.InvariantCultureIgnoreCase)))
+            if ((demo[0].Equals("x") && demo[1].Equals("x") && demo[2].Equals("x")) || (demo[3].Equals("x") && demo[4].Equals("x") && demo[5].Equals("x"))
+                    || (demo[6].Equals("x") && demo[7].Equals("x") && demo[8].Equals("x")) || (demo[0].Equals("x") && demo[3].Equals("x") && demo[6].Equals("x"))
+                    || (demo[1].Equals("x") && demo[4].Equals("x") && demo[7].Equals("x")) || (demo[2].Equals("x") && demo[5].Equals("x") && demo[8].Equals("x"))
+                    || (demo[0].Equals("x") && demo[4].Equals("x") && demo[8].Equals("x")) || (demo[2].Equals("x") && demo[4].Equals("x") && demo[6].Equals("x")))
             {
                 return -1;
             }
 
-            if ((demo[0].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[1].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[2].Equals("o", StringComparison.InvariantCultureIgnoreCase)) || (demo[3].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[5].Equals("o", StringComparison.InvariantCultureIgnoreCase))
-                    || (demo[6].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[7].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("o", StringComparison.InvariantCultureIgnoreCase)) || (demo[0].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[3].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[6].Equals("o", StringComparison.InvariantCultureIgnoreCase))
-                    || (demo[1].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[7].Equals("o", StringComparison.InvariantCultureIgnoreCase)) || (demo[2].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[5].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("o", StringComparison.InvariantCultureIgnoreCase))
-                    || (demo[0].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[8].Equals("o", StringComparison.InvariantCultureIgnoreCase)) || (demo[2].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[4].Equals("o", StringComparison.InvariantCultureIgnoreCase) && demo[6].Equals("o", StringComparison.InvariantCultureIgnoreCase)))
+            if ((demo[0].Equals("o") && demo[1].Equals("o") && demo[2].Equals("o")) || (demo[3].Equals("o") && demo[4].Equals("o") && demo[5].Equals("o"))
+                    || (demo[6].Equals("o") && demo[7].Equals("o") && demo[8].Equals("o")) || (demo[0].Equals("o") && demo[3].Equals("o") && demo[6].Equals("o"))
+                    || (demo[1].Equals("o") && demo[4].Equals("o") && demo[7].Equals("o")) || (demo[2].Equals("o") && demo[5].Equals("o") && demo[8].Equals("o"))
+                    || (demo[0].Equals("o") && demo[4].Equals("o") && demo[8].Equals("o")) || (demo[2].Equals("o") && demo[4].Equals("o") && demo[6].Equals("o")))
             {
                 return 1;
             }
