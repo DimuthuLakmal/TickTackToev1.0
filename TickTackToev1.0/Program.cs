@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TickTackToev1._0
+namespace TickTackToev1_0
 {
     static class Program
     {

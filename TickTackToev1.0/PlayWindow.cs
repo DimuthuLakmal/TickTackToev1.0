@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TickTackToev1._0
+namespace TickTackToev1_0
 {
     public partial class TickTackToe : MetroForm
     {
@@ -68,7 +68,6 @@ namespace TickTackToev1._0
 
             playforFirstTime = true;
             singleOrMulti = "Multi";
-            
         }
 
         public TickTackToe(String playerName, String playerSymbol)
@@ -97,7 +96,11 @@ namespace TickTackToev1._0
             }
             playerLabel.Text = "";
             singleOrMulti = "Single";
-            
+
+            for (int i = 0; i < 9; i++)
+            {
+                gameXO[i] = " ";
+            }
         }
 
         public void getData() {
@@ -363,7 +366,6 @@ namespace TickTackToev1._0
         {
 
         }
-
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {

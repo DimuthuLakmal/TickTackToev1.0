@@ -7,8 +7,8 @@
     <ProjectGuid>{32A3B8F9-2A86-48D6-A5F4-230FC506AB5F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TickTackToev1._0</RootNamespace>
-    <AssemblyName>TickTackToev1.0</AssemblyName>
+    <RootNamespace>TickTackToev1_0</RootNamespace>
+    <AssemblyName>TickTackToev1_0</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,6 +41,9 @@
     <Reference Include="MetroFramework.Fonts">
       <HintPath>D:\Java Projects and Tools\C# tools\Metro\winforms-modernui-master\DLL\MetroFramework.Fonts.dll</HintPath>
     </Reference>
+    <Reference Include="mysql.data">
+      <HintPath>..\mysql.data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CDBC.cs" />
     <Compile Include="PlayWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +96,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

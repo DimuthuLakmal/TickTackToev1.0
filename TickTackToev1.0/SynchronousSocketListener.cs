@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 
-namespace TickTackToev1._0
+namespace TickTackToev1_0
 {
     class SynchronousSocketListener
     {
