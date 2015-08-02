@@ -1,4 +1,4 @@
-﻿namespace TickTackToev1._0
+﻿namespace TickTackToev1_0
 {
     partial class PlayerOption
     {

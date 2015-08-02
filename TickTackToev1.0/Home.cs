@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TickTackToev1._0
+namespace TickTackToev1_0
 {
     public partial class Home : MetroForm
     {

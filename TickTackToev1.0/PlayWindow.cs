@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TickTackToev1._0
+namespace TickTackToev1_0
 {
     public partial class TickTackToe : MetroForm
     {
@@ -68,7 +68,6 @@ namespace TickTackToev1._0
 
             playforFirstTime = true;
             singleOrMulti = "Multi";
-            
         }
 
         public TickTackToe(String playerName, String playerSymbol)
@@ -86,18 +85,22 @@ namespace TickTackToev1._0
             if (playerSymbol == "circle")
             {
                 meBox.Image = Image.FromFile("circle_still.png");
-                currentPlayerMark = 'x';
-                mySymbol = 'x';
+                currentPlayerMark = 'o';
+                mySymbol = 'o';
             }
             else
             {
                 meBox.Image = Image.FromFile("cross_still.png");
-                currentPlayerMark = 'o';
-                mySymbol = 'o';
+                currentPlayerMark = 'x';
+                mySymbol = 'x';
             }
             playerLabel.Text = "";
             singleOrMulti = "Single";
-            
+
+            for (int i = 0; i < 9; i++)
+            {
+                gameXO[i] = " ";
+            }
         }
 
         public void getData() {
@@ -289,10 +292,30 @@ namespace TickTackToev1._0
                 }
             }
 
-           
+            return false;
+        }
+
+
+        public bool placeMarkSinglePlay(int row, int col)
+        {
+
+            // Make sure that row and column are in bounds of the board.
+            if ((row >= 0) && (row < 3))
+            {
+                if ((col >= 0) && (col < 3))
+                {
+                    if (board[row][col] == '-')
+                    {
+                        board[row][col] = currentPlayerMark;
+                       
+                        return true;
+                    }
+                }
+            }
 
             return false;
         }
+
 
         public bool placeMarkRemote(int row, int col)
         {
@@ -347,6 +370,21 @@ namespace TickTackToev1._0
             changePlayer();
         }
 
+        public void checkWinnerSinglePlay()
+        {
+            if (checkForWin())
+            {
+                Console.WriteLine("We have a winner! Congrats!");
+                //panel2.Visible = true;
+            }
+            else if (isBoardFull())
+            {
+                Console.WriteLine("Appears we have a draw!");
+                //panel2.Visible = true;
+            }
+        }
+
+
         public void setImage(PictureBox pb) {
         if (currentPlayerMark == 'x') {
             Image img = Image.FromFile("cross_1.gif");
@@ -358,12 +396,27 @@ namespace TickTackToev1._0
             pb.Image = img;
         }
     }
+
+        public void setImageOponent(PictureBox pb)
+        {
+            if (currentPlayerMark == 'x')
+            {
+                Image img = Image.FromFile("round_1.gif");
+                pb.Image = img;
+
+
+            }
+            else if (currentPlayerMark == 'o')
+            {
+                Image img = Image.FromFile("cross_1.gif");
+                pb.Image = img;
+            }
+        }
             
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
         }
-
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -377,7 +430,8 @@ namespace TickTackToev1._0
                     checkWinner();
                 }
             }
-            else {
+            else {                
+                setImage(pictureBox1);
                 makeMove(8);
             }
         }
@@ -396,6 +450,7 @@ namespace TickTackToev1._0
             }
             else
             {
+                setImage(pictureBox5);
                 makeMove(0);
             }
         }
@@ -413,6 +468,7 @@ namespace TickTackToev1._0
                 }
             }
             else {
+                setImage(pictureBox4);
                 makeMove(1);
             }
         }
@@ -430,6 +486,7 @@ namespace TickTackToev1._0
                 }
             }
             else {
+                setImage(pictureBox3);
                 makeMove(2);
             }
         }
@@ -447,6 +504,7 @@ namespace TickTackToev1._0
                 }
             }
             else {
+                setImage(pictureBox7);
                 makeMove(3);
             }
         }
@@ -464,6 +522,7 @@ namespace TickTackToev1._0
                 }
             }
             else {
+                setImage(pictureBox6);
                 makeMove(4);
             }
         }
@@ -481,6 +540,7 @@ namespace TickTackToev1._0
                 }
             }
             else {
+                setImage(pictureBox2);
                 makeMove(5);
             }
         }
@@ -498,6 +558,7 @@ namespace TickTackToev1._0
                 }
             }
             else {
+                setImage(pictureBox8);
                 makeMove(6);
             }
         }
@@ -515,6 +576,7 @@ namespace TickTackToev1._0
                 }
             }
             else {
+                setImage(pictureBox9);
                 makeMove(7);
             }
         }
@@ -574,7 +636,8 @@ namespace TickTackToev1._0
             ResultMM res = MinMax(gameXO, "MAX", 0, 0);
             int i = res.getIntrus();
             // code for show the image or whatever in the design
-            setImage(getPictureBox(i));
+            setImageOponent(getPictureBox(i));
+
 
             //4
             gameXO[i] = "O";
