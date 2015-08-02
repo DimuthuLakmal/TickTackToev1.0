@@ -114,6 +114,7 @@
             this.metroButton1.Size = new System.Drawing.Size(384, 38);
             this.metroButton1.TabIndex = 6;
             this.metroButton1.Text = "Save";
+            this.metroButton1.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroButton1.UseSelectable = true;
             this.metroButton1.Click += new System.EventHandler(this.metroButton1_Click);
             // 

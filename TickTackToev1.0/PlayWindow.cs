@@ -27,6 +27,11 @@ namespace TickTackToev1_0
 
         CDBC cdbc = new CDBC();
 
+        public TickTackToe()
+        {
+
+        }
+
         public TickTackToe(String me, String player, String meSymbol, String playerSymbol, string serverOrClient, Socket s)
         {
             InitializeComponent();
