@@ -35,6 +35,12 @@
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.playerLabel = new MetroFramework.Controls.MetroLabel();
+            this.meLabel = new MetroFramework.Controls.MetroLabel();
+            this.playerBox = new System.Windows.Forms.PictureBox();
+            this.meBox = new System.Windows.Forms.PictureBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.metroButton3 = new MetroFramework.Controls.MetroButton();
             this.pictureBox9 = new System.Windows.Forms.PictureBox();
             this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
@@ -44,15 +50,12 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.metroButton3 = new MetroFramework.Controls.MetroButton();
-            this.meBox = new System.Windows.Forms.PictureBox();
-            this.playerBox = new System.Windows.Forms.PictureBox();
-            this.meLabel = new MetroFramework.Controls.MetroLabel();
-            this.playerLabel = new MetroFramework.Controls.MetroLabel();
             this.metroPanel1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.playerBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.meBox)).BeginInit();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
@@ -62,9 +65,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.meBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.playerBox)).BeginInit();
             this.SuspendLayout();
             // 
             // metroPanel1
@@ -135,6 +135,62 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(617, 398);
             this.panel1.TabIndex = 3;
+            // 
+            // playerLabel
+            // 
+            this.playerLabel.AutoSize = true;
+            this.playerLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.playerLabel.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+            this.playerLabel.Location = new System.Drawing.Point(399, 207);
+            this.playerLabel.Name = "playerLabel";
+            this.playerLabel.Size = new System.Drawing.Size(74, 25);
+            this.playerLabel.TabIndex = 38;
+            this.playerLabel.Text = "Player 2";
+            // 
+            // meLabel
+            // 
+            this.meLabel.AutoSize = true;
+            this.meLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.meLabel.FontWeight = MetroFramework.MetroLabelWeight.Regular;
+            this.meLabel.Location = new System.Drawing.Point(399, 88);
+            this.meLabel.Name = "meLabel";
+            this.meLabel.Size = new System.Drawing.Size(74, 25);
+            this.meLabel.TabIndex = 37;
+            this.meLabel.Text = "Player 1";
+            // 
+            // playerBox
+            // 
+            this.playerBox.Location = new System.Drawing.Point(515, 191);
+            this.playerBox.Name = "playerBox";
+            this.playerBox.Size = new System.Drawing.Size(75, 70);
+            this.playerBox.TabIndex = 36;
+            this.playerBox.TabStop = false;
+            // 
+            // meBox
+            // 
+            this.meBox.Location = new System.Drawing.Point(515, 74);
+            this.meBox.Name = "meBox";
+            this.meBox.Size = new System.Drawing.Size(75, 70);
+            this.meBox.TabIndex = 35;
+            this.meBox.TabStop = false;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.metroButton3);
+            this.panel2.Location = new System.Drawing.Point(0, 385);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(590, 10);
+            this.panel2.TabIndex = 4;
+            // 
+            // metroButton3
+            // 
+            this.metroButton3.Location = new System.Drawing.Point(239, 191);
+            this.metroButton3.Name = "metroButton3";
+            this.metroButton3.Size = new System.Drawing.Size(112, 51);
+            this.metroButton3.TabIndex = 0;
+            this.metroButton3.Text = "Try Again";
+            this.metroButton3.UseSelectable = true;
+            this.metroButton3.Click += new System.EventHandler(this.metroButton3_Click);
             // 
             // pictureBox9
             // 
@@ -217,60 +273,6 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.metroButton3);
-            this.panel2.Location = new System.Drawing.Point(0, 385);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(590, 10);
-            this.panel2.TabIndex = 4;
-            // 
-            // metroButton3
-            // 
-            this.metroButton3.Location = new System.Drawing.Point(239, 191);
-            this.metroButton3.Name = "metroButton3";
-            this.metroButton3.Size = new System.Drawing.Size(112, 51);
-            this.metroButton3.TabIndex = 0;
-            this.metroButton3.Text = "Try Again";
-            this.metroButton3.UseSelectable = true;
-            this.metroButton3.Click += new System.EventHandler(this.metroButton3_Click);
-            // 
-            // meBox
-            // 
-            this.meBox.Location = new System.Drawing.Point(515, 74);
-            this.meBox.Name = "meBox";
-            this.meBox.Size = new System.Drawing.Size(75, 70);
-            this.meBox.TabIndex = 35;
-            this.meBox.TabStop = false;
-            // 
-            // playerBox
-            // 
-            this.playerBox.Location = new System.Drawing.Point(515, 191);
-            this.playerBox.Name = "playerBox";
-            this.playerBox.Size = new System.Drawing.Size(75, 70);
-            this.playerBox.TabIndex = 36;
-            this.playerBox.TabStop = false;
-            // 
-            // meLabel
-            // 
-            this.meLabel.AutoSize = true;
-            this.meLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.meLabel.Location = new System.Drawing.Point(405, 88);
-            this.meLabel.Name = "meLabel";
-            this.meLabel.Size = new System.Drawing.Size(36, 25);
-            this.meLabel.TabIndex = 37;
-            this.meLabel.Text = "Me";
-            // 
-            // playerLabel
-            // 
-            this.playerLabel.AutoSize = true;
-            this.playerLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.playerLabel.Location = new System.Drawing.Point(405, 207);
-            this.playerLabel.Name = "playerLabel";
-            this.playerLabel.Size = new System.Drawing.Size(58, 25);
-            this.playerLabel.TabIndex = 38;
-            this.playerLabel.Text = "Player";
-            // 
             // TickTackToe
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -286,6 +288,9 @@
             this.menuStrip2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.playerBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.meBox)).EndInit();
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
@@ -295,9 +300,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.meBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.playerBox)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -20,6 +20,8 @@ namespace TickTackToev1_0
         private String serverOrClient;
         private Socket s;
 
+        CDBC cdbc = new CDBC();
+
         public Home()
         {
             InitializeComponent();
@@ -28,6 +30,7 @@ namespace TickTackToev1_0
 
         private void metroButton1_Click(object sender, EventArgs e)
         {
+            metroButton2.Enabled = true;
             this.Hide();
             PlayerOption playerOption = new PlayerOption(this);
             playerOption.Show();
@@ -60,7 +63,7 @@ namespace TickTackToev1_0
         private void metroButton2_Click(object sender, EventArgs e)
         {
 
-            String mySymbol,otherPlayerSymbol;
+            String mySymbol, otherPlayerSymbol;
             if (serverOrClient != "single")
             {
                 if (plyerSymbol == "circle")
@@ -77,12 +80,13 @@ namespace TickTackToev1_0
                 this.Hide();
                 t.Show();
             }
-            else {
+            else
+            {
                 TickTackToe t = new TickTackToe(playerName, plyerSymbol);
                 this.Hide();
                 t.Show();
             }
-            
+
         }
 
         public void getData()
@@ -90,13 +94,26 @@ namespace TickTackToev1_0
             if (serverOrClient == "Server")
             {
                 string data = SynchronousSocketListener.getData(s);
-                otherPlayerName = data.Substring(0,data.Length-4);
+                otherPlayerName = data.Substring(0, data.Length - 4);
 
             }
             else
             {
                 string data = SynchronousSocketClient.getData(s);
-                otherPlayerName = data.Substring(0, data.Length - 4); 
+                otherPlayerName = data.Substring(0, data.Length - 4);
+            }
+        }
+
+        private void highScore_Click(object sender, EventArgs e)
+        {
+            DataSet ds = cdbc.SelectDataSet("SELECT * FROM score ORDER BY score DESC LIMIT 3");
+            Console.WriteLine(ds);
+            if (ds.Tables[0].Rows.Count != 0)
+            {
+                DataRow dr0 = ds.Tables[0].Rows[0];
+                DataRow dr1 = ds.Tables[0].Rows[1];
+                DataRow dr2 = ds.Tables[0].Rows[2];
+                MessageBox.Show(dr0["name"].ToString() + "\t - " + dr0["score"].ToString() + '\n' + dr1["name"].ToString() + "\t - " + dr1["score"].ToString() + '\n' + dr2["name"].ToString() + "\t - " + dr2["score"].ToString(), "High Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

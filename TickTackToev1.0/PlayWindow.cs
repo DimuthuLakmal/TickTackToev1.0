@@ -25,25 +25,29 @@ namespace TickTackToev1_0
         private bool playforFirstTime;
         private string singleOrMulti;
 
-        public TickTackToe(String me,String player,String meSymbol,String playerSymbol,string serverOrClient,Socket s)
+        CDBC cdbc = new CDBC();
+
+        public TickTackToe(String me, String player, String meSymbol, String playerSymbol, string serverOrClient, Socket s)
         {
             InitializeComponent();
             board = new char[3][];
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++)
+            {
                 board[i] = new char[3];
             }
             initializeBoard();
             panel2.Visible = false;
 
             playerLabel.Text = player;
-            Console.WriteLine("Name : " +player);
+            Console.WriteLine("Name : " + player);
             if (playerSymbol == "circle")
             {
                 playerBox.Image = Image.FromFile("circle_still.png");
                 currentPlayerMark = 'x';
                 mySymbol = 'x';
             }
-            else {
+            else
+            {
                 playerBox.Image = Image.FromFile("cross_still.png");
                 currentPlayerMark = 'o';
                 mySymbol = 'o';
@@ -64,7 +68,7 @@ namespace TickTackToev1_0
             t = new Thread(getData);
             t.Start();
 
-            picBoxes = new PictureBox[3, 3]{ { pictureBox5, pictureBox4, pictureBox3 }, { pictureBox7, pictureBox6, pictureBox2 }, { pictureBox8, pictureBox9, pictureBox1 }};
+            picBoxes = new PictureBox[3, 3] { { pictureBox5, pictureBox4, pictureBox3 }, { pictureBox7, pictureBox6, pictureBox2 }, { pictureBox8, pictureBox9, pictureBox1 } };
 
             playforFirstTime = true;
             singleOrMulti = "Multi";
@@ -105,7 +109,8 @@ namespace TickTackToev1_0
             playforFirstTime = true;
         }
 
-        public void getData() {
+        public void getData()
+        {
             if (serverOrClient == "Server")
             {
                 string rawData = SynchronousSocketListener.getData(socket);
@@ -113,7 +118,7 @@ namespace TickTackToev1_0
                 {
                     Console.WriteLine(rawData);
                 }
-                else if(rawData!="<EOF>")
+                else if (rawData != "<EOF>")
                 {
                     string[] data = rawData.Substring(0, 3).Split(',');
                     if (mySymbol == 'x')
@@ -169,13 +174,16 @@ namespace TickTackToev1_0
         }
 
         // Print the current board (may be replaced by GUI implementation later)
-        public void printBoard() {
-        Console.WriteLine("-------------");
+        public void printBoard()
+        {
+            Console.WriteLine("-------------");
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++)
+            {
                 Console.WriteLine("| ");
-                for (int j = 0; j < 3; j++) {
-                   Console.WriteLine(board[i][j] + " | ");
+                for (int j = 0; j < 3; j++)
+                {
+                    Console.WriteLine(board[i][j] + " | ");
                 }
                 Console.WriteLine();
                 Console.WriteLine("-------------");
@@ -309,7 +317,7 @@ namespace TickTackToev1_0
                     if (board[row][col] == '-')
                     {
                         board[row][col] = currentPlayerMark;
-                       
+
                         return true;
                     }
                 }
@@ -343,9 +351,9 @@ namespace TickTackToev1_0
             String finalResult = "";
             if (checkForWin())
             {
-                 finalResult = "We have a winner! Congrats!";
-                 Console.WriteLine("We have a winner! Congrats!");
-                 //panel2.Visible = true;
+                finalResult = "We have a winner! Congrats!";
+                Console.WriteLine("We have a winner! Congrats!");
+                //panel2.Visible = true;
             }
             else if (isBoardFull())
             {
@@ -368,7 +376,7 @@ namespace TickTackToev1_0
                 t = new Thread(getData);
                 t.Start();
             }
-            
+
             changePlayer();
         }
 
@@ -377,36 +385,59 @@ namespace TickTackToev1_0
             if (checkForWin())
             {
                 Console.WriteLine("We have a winner! Congrats!");
+                MessageBox.Show("We have a winner! Congrats!");
+
+                if (currentPlayerMark == 'x' && mySymbol == 'x')
+                {
+                    DataSet ds = cdbc.SelectDataSet("SELECT score FROM score WHERE name='" + meLabel.Text + "'");
+                    Console.WriteLine(ds);
+                    if (ds.Tables[0].Rows.Count == 0)
+                    {
+                        cdbc.Insert("INSERT INTO score(name, score) VALUES('" + meLabel.Text + "','1')");
+                    }
+                    else
+                    {
+                        DataRow dr = ds.Tables[0].Rows[0];
+                        int s = (int)dr["score"] + 1;
+                        cdbc.Update("UPDATE score SET score='" + s + "' WHERE name='" + meLabel.Text + "'");
+                    }
+                    
+                }
+                else if (currentPlayerMark == 'o' && mySymbol == 'o')
+                {
+                    cdbc.Insert("INSERT INTO score(name, score) VALUES('" + meLabel.Text + "','1')");
+                }
+                
+                System.Windows.Forms.Application.Exit();
                 return true;
-                //panel2.Visible = true;
             }
             else if (isBoardFull())
             {
                 Console.WriteLine("Appears we have a draw!");
+                MessageBox.Show("Appears we have a draw!");
+
+                System.Windows.Forms.Application.Exit();
                 return true;
-                //panel2.Visible = true;
             }
             changePlayer();
             return false;
         }
 
 
-        public void setImage(PictureBox pb) {
-        if (currentPlayerMark == 'x') {
-            Image img = Image.FromFile("cross_1.gif");
-            pb.Image = img;
-            
-
-        } else if (currentPlayerMark == 'o') {
-            Image img = Image.FromFile("round_1.gif");
-            pb.Image = img;
-        }
-    }
-
-            
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        public void setImage(PictureBox pb)
         {
+            if (currentPlayerMark == 'x')
+            {
+                Image img = Image.FromFile("cross_1.gif");
+                pb.Image = img;
 
+
+            }
+            else if (currentPlayerMark == 'o')
+            {
+                Image img = Image.FromFile("round_1.gif");
+                pb.Image = img;
+            }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -416,13 +447,13 @@ namespace TickTackToev1_0
             {
                 if (currentPlayerMark == mySymbol && pictureBox1.Image == null)
                 {
-                    
                     setImage(pictureBox1);
                     placeMark(2, 2);
                     checkWinner();
                 }
             }
-            else {                
+            else
+            {
                 setImage(pictureBox1);
                 placeMarkSinglePlay(2, 2);
                 if (!checkWinnerSinglePlay())
@@ -448,10 +479,11 @@ namespace TickTackToev1_0
             {
                 setImage(pictureBox5);
                 placeMarkSinglePlay(0, 0);
-                if (!checkWinnerSinglePlay()) {
+                if (!checkWinnerSinglePlay())
+                {
                     makeMove(0);
                 }
-                
+
             }
         }
 
@@ -467,7 +499,8 @@ namespace TickTackToev1_0
                     checkWinner();
                 }
             }
-            else {
+            else
+            {
                 setImage(pictureBox4);
                 placeMarkSinglePlay(0, 1);
                 if (!checkWinnerSinglePlay())
@@ -489,7 +522,8 @@ namespace TickTackToev1_0
                     checkWinner();
                 }
             }
-            else {
+            else
+            {
                 setImage(pictureBox3);
                 placeMarkSinglePlay(0, 2);
                 if (!checkWinnerSinglePlay())
@@ -511,7 +545,8 @@ namespace TickTackToev1_0
                     checkWinner();
                 }
             }
-            else {
+            else
+            {
                 setImage(pictureBox7);
                 placeMarkSinglePlay(1, 0);
                 if (!checkWinnerSinglePlay())
@@ -533,7 +568,8 @@ namespace TickTackToev1_0
                     checkWinner();
                 }
             }
-            else {
+            else
+            {
                 setImage(pictureBox6);
                 placeMarkSinglePlay(1, 1);
                 if (!checkWinnerSinglePlay())
@@ -555,7 +591,8 @@ namespace TickTackToev1_0
                     checkWinner();
                 }
             }
-            else {
+            else
+            {
                 setImage(pictureBox2);
                 placeMarkSinglePlay(1, 2);
                 if (!checkWinnerSinglePlay())
@@ -578,7 +615,8 @@ namespace TickTackToev1_0
                     checkWinner();
                 }
             }
-            else {
+            else
+            {
                 setImage(pictureBox8);
                 placeMarkSinglePlay(2, 0);
                 if (!checkWinnerSinglePlay())
@@ -600,7 +638,8 @@ namespace TickTackToev1_0
                     checkWinner();
                 }
             }
-            else {
+            else
+            {
                 setImage(pictureBox9);
                 placeMarkSinglePlay(2, 1);
                 if (!checkWinnerSinglePlay())
@@ -615,7 +654,7 @@ namespace TickTackToev1_0
             panel2.Visible = false;
         }
 
-        //----------------------------------Single Player MiniMax Algorithm------------------------------------------------------
+        //----------------------------------Single Player MinMax Algorithm------------------------------------------------------
 
         //gameXO is the game
         static String[] gameXO = new String[9];
@@ -624,7 +663,8 @@ namespace TickTackToev1_0
 
         public PictureBox getPictureBox(int i)
         {
-            switch(i){
+            switch (i)
+            {
                 case 0: return pictureBox5;
                 case 1: return pictureBox4;
                 case 2: return pictureBox3;
@@ -650,7 +690,7 @@ namespace TickTackToev1_0
             //return -2 to know that the game is draw
             //1
 
-            gameXO[index] = "X";
+            gameXO[index] = "x";
             //2
             if (gameOver(gameXO))
             {
@@ -664,43 +704,16 @@ namespace TickTackToev1_0
             //3
             ResultMM res = MinMax(gameXO, "MAX", 0, 0);
             int i = res.getIntrus();
-            // code for show the image or whatever in the design
-            setImage(getPictureBox(i));
-            switch (i) { 
-            
-                case 0 :
-                    placeMarkSinglePlay(0, 0);
-                    break;
-                case 1:
-                    placeMarkSinglePlay(0, 1);
-                    break;
-                case 2:
-                    placeMarkSinglePlay(0, 2);
-                    break;
-                case 3:
-                    placeMarkSinglePlay(1, 0);
-                    break;
-                case 4:
-                    placeMarkSinglePlay(1, 1);
-                    break;
-                case 5:
-                    placeMarkSinglePlay(1, 2);
-                    break;
-                case 6:
-                    placeMarkSinglePlay(2, 0);
-                    break;
-                case 7:
-                    placeMarkSinglePlay(2, 1);
-                    break;
-                case 8:
-                    placeMarkSinglePlay(2, 2);
-                    break;             
-
-            }
-            checkWinnerSinglePlay();
 
             //4
-            gameXO[i] = "O";
+            gameXO[i] = "o";
+
+            // code for show the image or whatever in the design
+            setImage(getPictureBox(i));
+            placeMarkSinglePlay(i/3, i%3);
+            
+            checkWinnerSinglePlay();
+            Console.WriteLine(i);
 
             //5
             // return i+20 to know that o wins (i used this method for programming issues)
@@ -713,9 +726,7 @@ namespace TickTackToev1_0
             {
                 return i - 30;
             }
-
             return i;
-
         }
 
         public ResultMM MinMax(String[] demo, String level, int fils, int depth)
@@ -743,15 +754,15 @@ namespace TickTackToev1_0
             }
             else
             {//3------------------
-                if (sdepth > children.Count())
+                if (sdepth > children.Count)
                 {
-                    sdepth = children.Count();
+                    sdepth = children.Count;
                     depth = depth + 1;
                 }
 
                 List<ResultMM> listScore = new List<ResultMM>();
                 //pass into each child
-                for (int i = 0; i < children.Count(); i++)
+                for (int i = 0; i < children.Count; i++)
                 {//3 a)---------------
                     listScore.Add(MinMax(children.ElementAt(i), inverse(level), 1, depth + 1));
                 }
@@ -773,7 +784,7 @@ namespace TickTackToev1_0
             ResultMM result = listScore.ElementAt(0);
             if (level.Equals("MAX"))
             {
-                for (int i = 1; i < listScore.Count(); i++)
+                for (int i = 1; i < listScore.Count; i++)
                 {
                     if ((listScore.ElementAt(i).getScore() > result.getScore())
                             || (listScore.ElementAt(i).getScore() == result.getScore() && listScore.ElementAt(i).depth < result.depth))
@@ -784,7 +795,7 @@ namespace TickTackToev1_0
             }
             else
             {
-                for (int i = 1; i < listScore.Count(); i++)
+                for (int i = 1; i < listScore.Count; i++)
                 {
                     if ((listScore.ElementAt(i).getScore() < result.getScore())
                             || (listScore.ElementAt(i).getScore() == result.getScore() && listScore.ElementAt(i).depth < result.depth))
@@ -823,7 +834,7 @@ namespace TickTackToev1_0
                     succ.Add(child);
                 }
             }
-            return (succ.Count() == 0) ? null : succ;
+            return (succ.Count == 0) ? null : succ;
         }
 
         public String inverse(String level)
@@ -874,10 +885,12 @@ namespace TickTackToev1_0
             }
             return true;
         }
+
     }
 
     public class ResultMM
     {
+
         public String[] matrix;
         public int score;
         public int depth;

@@ -3,6 +3,16 @@ c:\users\dimuthu\documents\visual studio 2013\Projects\TickTackToev1.0\TickTackT
 c:\users\dimuthu\documents\visual studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\MetroFramework.Fonts.dll
 c:\users\dimuthu\documents\visual studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1.0.csprojResolveAssemblyReference.cache
 c:\users\dimuthu\documents\visual studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1.0.csproj.GenerateResource.Cache
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\TickTackToev1_0.exe.config
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.exe
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.pdb
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\TickTackToev1_0.exe
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\TickTackToev1_0.pdb
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\mysql.data.dll
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.TickTackToe.resources
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.Home.resources
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.PlayerOption.resources
+C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.Properties.Resources.resources
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\bin\Debug\TickTackToev1_0.exe.config
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\bin\Debug\TickTackToev1_0.exe
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\bin\Debug\TickTackToev1_0.pdb
@@ -14,13 +24,3 @@ C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1_0.Pro
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1.0.csproj.GenerateResource.Cache
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1_0.exe
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1_0.pdb
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\TickTackToev1_0.exe.config
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.exe
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.pdb
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\TickTackToev1_0.exe
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\TickTackToev1_0.pdb
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\bin\Debug\mysql.data.dll
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.TickTackToe.resources
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.Home.resources
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.PlayerOption.resources
-C:\Users\Dimuthu\Documents\Visual Studio 2013\Projects\TickTackToev1.0\TickTackToev1.0\obj\Debug\TickTackToev1_0.Properties.Resources.resources

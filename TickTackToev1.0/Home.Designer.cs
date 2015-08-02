@@ -42,29 +42,34 @@
             this.highScore.Size = new System.Drawing.Size(137, 53);
             this.highScore.TabIndex = 0;
             this.highScore.Text = "High Scores";
+            this.highScore.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.highScore.UseSelectable = true;
+            this.highScore.Click += new System.EventHandler(this.highScore_Click);
             // 
             // metroButton1
             // 
             this.metroButton1.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.metroButton1.FontWeight = MetroFramework.MetroButtonWeight.Regular;
-            this.metroButton1.Location = new System.Drawing.Point(58, 219);
+            this.metroButton1.Location = new System.Drawing.Point(310, 129);
             this.metroButton1.Name = "metroButton1";
             this.metroButton1.Size = new System.Drawing.Size(137, 55);
             this.metroButton1.TabIndex = 1;
             this.metroButton1.Text = "Player Options";
+            this.metroButton1.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroButton1.UseSelectable = true;
             this.metroButton1.Click += new System.EventHandler(this.metroButton1_Click);
             // 
             // metroButton2
             // 
+            this.metroButton2.Enabled = false;
             this.metroButton2.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.metroButton2.FontWeight = MetroFramework.MetroButtonWeight.Regular;
-            this.metroButton2.Location = new System.Drawing.Point(58, 308);
+            this.metroButton2.Location = new System.Drawing.Point(559, 129);
             this.metroButton2.Name = "metroButton2";
             this.metroButton2.Size = new System.Drawing.Size(137, 55);
             this.metroButton2.TabIndex = 2;
             this.metroButton2.Text = "Play";
+            this.metroButton2.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.metroButton2.UseSelectable = true;
             this.metroButton2.Click += new System.EventHandler(this.metroButton2_Click);
             // 
@@ -72,13 +77,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(755, 450);
+            this.BackgroundImage = global::TickTackToev1_0.Properties.Resources.background;
+            this.ClientSize = new System.Drawing.Size(755, 253);
             this.Controls.Add(this.metroButton2);
             this.Controls.Add(this.metroButton1);
             this.Controls.Add(this.highScore);
             this.Name = "Home";
-            this.Text = "Home";
-            this.TextAlign = MetroFramework.Forms.MetroFormTextAlign.Center;
+            this.Text = "TicTacToe v1.0";
+            this.Theme = MetroFramework.MetroThemeStyle.Default;
             this.ResumeLayout(false);
 
         }
