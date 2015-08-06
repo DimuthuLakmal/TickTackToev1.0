@@ -110,6 +110,7 @@ namespace TickTackToev1_0
             {
                 gameXO[i] = " ";
             }
+            sdepth = 0;
 
             playforFirstTime = true;
         }
@@ -310,7 +311,6 @@ namespace TickTackToev1_0
             return false;
         }
 
-
         public bool placeMarkSinglePlay(int row, int col)
         {
 
@@ -330,7 +330,6 @@ namespace TickTackToev1_0
 
             return false;
         }
-
 
         public bool placeMarkRemote(int row, int col)
         {
@@ -406,13 +405,13 @@ namespace TickTackToev1_0
                         int s = (int)dr["score"] + 1;
                         cdbc.Update("UPDATE score SET score='" + s + "' WHERE name='" + meLabel.Text + "'");
                     }
-                    
+
                 }
                 else if (currentPlayerMark == 'o' && mySymbol == 'o')
                 {
                     cdbc.Insert("INSERT INTO score(name, score) VALUES('" + meLabel.Text + "','1')");
                 }
-                
+
                 System.Windows.Forms.Application.Exit();
                 return true;
             }
@@ -427,7 +426,6 @@ namespace TickTackToev1_0
             changePlayer();
             return false;
         }
-
 
         public void setImage(PictureBox pb)
         {
@@ -709,16 +707,14 @@ namespace TickTackToev1_0
             //3
             ResultMM res = MinMax(gameXO, "MAX", 0, 0);
             int i = res.getIntrus();
+            Console.WriteLine(i);
+
+            setImage(getPictureBox(i));
+            placeMarkSinglePlay(i / 3, i % 3);
+            checkWinnerSinglePlay();
 
             //4
             gameXO[i] = "o";
-
-            // code for show the image or whatever in the design
-            setImage(getPictureBox(i));
-            placeMarkSinglePlay(i/3, i%3);
-            
-            checkWinnerSinglePlay();
-            Console.WriteLine(i);
 
             //5
             // return i+20 to know that o wins (i used this method for programming issues)
@@ -731,7 +727,9 @@ namespace TickTackToev1_0
             {
                 return i - 30;
             }
+
             return i;
+
         }
 
         public ResultMM MinMax(String[] demo, String level, int fils, int depth)
@@ -759,15 +757,15 @@ namespace TickTackToev1_0
             }
             else
             {//3------------------
-                if (sdepth > children.Count)
+                if (sdepth > children.Count())
                 {
-                    sdepth = children.Count;
+                    sdepth = children.Count();
                     depth = depth + 1;
                 }
 
                 List<ResultMM> listScore = new List<ResultMM>();
                 //pass into each child
-                for (int i = 0; i < children.Count; i++)
+                for (int i = 0; i < children.Count(); i++)
                 {//3 a)---------------
                     listScore.Add(MinMax(children.ElementAt(i), inverse(level), 1, depth + 1));
                 }
@@ -789,7 +787,7 @@ namespace TickTackToev1_0
             ResultMM result = listScore.ElementAt(0);
             if (level.Equals("MAX"))
             {
-                for (int i = 1; i < listScore.Count; i++)
+                for (int i = 1; i < listScore.Count(); i++)
                 {
                     if ((listScore.ElementAt(i).getScore() > result.getScore())
                             || (listScore.ElementAt(i).getScore() == result.getScore() && listScore.ElementAt(i).depth < result.depth))
@@ -800,7 +798,7 @@ namespace TickTackToev1_0
             }
             else
             {
-                for (int i = 1; i < listScore.Count; i++)
+                for (int i = 1; i < listScore.Count(); i++)
                 {
                     if ((listScore.ElementAt(i).getScore() < result.getScore())
                             || (listScore.ElementAt(i).getScore() == result.getScore() && listScore.ElementAt(i).depth < result.depth))
@@ -818,7 +816,7 @@ namespace TickTackToev1_0
             //if level is MIN, generate successor with x ( x in lowerCase)
             //if demo has no successor, return null
             List<String[]> succ = new List<String[]>();
-            for (int i = 0; i < demo.Length; i++)
+            for (int i = 0; i < demo.Count(); i++)
             {
                 if (demo[i].Equals(" "))
                 {
@@ -839,7 +837,7 @@ namespace TickTackToev1_0
                     succ.Add(child);
                 }
             }
-            return (succ.Count == 0) ? null : succ;
+            return (succ.Count() == 0) ? null : succ;
         }
 
         public String inverse(String level)
@@ -890,38 +888,37 @@ namespace TickTackToev1_0
             }
             return true;
         }
+    }
+}
 
+public class ResultMM
+{
+
+    public String[] matrix;
+    public int score;
+    public int depth;
+
+    public ResultMM(String[] matrix, int score, int depth)
+    {
+        this.matrix = matrix;
+        this.score = score;
+        this.depth = depth;
     }
 
-    public class ResultMM
+    public void updateMatrix(String[] matrix)
     {
+        this.matrix = matrix;
+    }
 
-        public String[] matrix;
-        public int score;
-        public int depth;
-
-        public ResultMM(String[] matrix, int score, int depth)
-        {
-            this.matrix = matrix;
-            this.score = score;
-            this.depth = depth;
-        }
-
-        public void updateMatrix(String[] matrix)
-        {
-            this.matrix = matrix;
-        }
-
-        public int getScore()
-        {
-            return score;
-        }
-        public int getIntrus()
-        {
-            for (int i = 0; i < 9; i++)
-                if (matrix[i].Equals("o"))
-                    return i;
-            return -1;
-        }
+    public int getScore()
+    {
+        return score;
+    }
+    public int getIntrus()
+    {
+        for (int i = 0; i < 9; i++)
+            if (matrix[i].Equals("o"))
+                return i;
+        return -1;
     }
 }

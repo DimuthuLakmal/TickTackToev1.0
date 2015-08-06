@@ -24,3 +24,4 @@ C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1_0.Pro
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1.0.csproj.GenerateResource.Cache
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1_0.exe
 C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1_0.pdb
+C:\Users\Chanaka\Desktop\TicTacToe\TickTackToev1.0\obj\Debug\TickTackToev1.0.csprojResolveAssemblyReference.cache
